@@ -1,0 +1,39 @@
+{
+  "name": "bootdapp",
+  "description": "A project template for your decentralized application.",
+  "keywords": ["dapp", "truffle", "ganache"],
+  "author": "Matthieu SCARSET <m@matthieuscarset.com>",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.0",
+  "config": {
+    "migrate_file": "src/migrate.log",
+    "account_file": "src/ganache.json",
+    "private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d",
+    "initial_balance": "20000000000000000000"
+  },
+  "scripts": {
+    "======= MAIN =============================================": "",
+    "start": "(yarn run chain > /dev/null) & (yarn run migrate > /dev/null) & yarn run dev",
+    "stop": "pkill node",
+    "======= FRONT =============================================": "",
+    "dev": "vite --open",
+    "preview": "vite preview",
+    "build": "vite build --emptyOutDir && yarn run migrate",
+    "======= BACK =============================================": "",
+    "migrate": "truffle migrate > $npm_package_config_migrate_file",
+    "test": "truffle test",
+    "chain": "ganache --account=\"$npm_package_config_private_key, $npm_package_config_initial_balance\" --account_keys_path=\"$npm_package_config_account_file\""
+  },
+  "devDependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "autoprefixer": "^10.4.2",
+    "ganache": "^7.0.2",
+    "postcss": "^8.4.6",
+    "tailwindcss": "^3.0.23",
+    "truffle": "^5.5.0",
+    "vite": "^2.8.0",
+    "web3": "^1.7.0"
+  },
+  "dependencies": {}
+}
