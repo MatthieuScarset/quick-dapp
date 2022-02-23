@@ -1,0 +1,9 @@
+/* TEAM */
+Author: Matthieu
+Site: poulet.eth
+Twitter: @MatthieuScarset
+
+/* SITE */
+Last update: 2022/02/12
+Components: Hardhat, Yarn, OpenZeppelin
+Software: Solidity, JavaScript

@@ -5,3 +5,13 @@
 #app {
   @apply relative h-screen overflow-x-hidden;
 }
+
+.link {
+  @apply underline italic hover:font-bold;
+}
+
+@supports (-webkit-text-stroke: 1px black) {
+  .stroke {
+    -webkit-text-stroke: 1px black;
+  }
+}

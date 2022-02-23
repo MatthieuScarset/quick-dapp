@@ -3,13 +3,21 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DApp</title>
 </head>
 
 <body>
-  <div id="app"></div>
+  <div class="h-screen bg-gray-200">
+    <div id="loading" class="absolute top-0 right-0 bottom-0 left-0 m-auto h-fit w-fit bg-gray-200 text-lg text-center">
+      <img src="assets/loading.gif" alt="Loading face" class="rounded-3xl animate-bounce" />
+      <p class=" mt-6 stroke text-white text-6xl">Looooading...</p>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
   <script type="module" src="/main.js"></script>
 </body>
 
