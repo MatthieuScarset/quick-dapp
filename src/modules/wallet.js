@@ -6,10 +6,13 @@ const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 class Wallet {
   constructor() {
     this.account = false;
+
     this.element = document.querySelector('#wallet');
 
+    this.network = document.querySelector('#walletNetwork');
+
     this.btn = document.querySelector('#walletConnect');
-    this.btn.addEventListener('click', this.connect, true);
+    this.btn.addEventListener('click', this.connectWallet, true);
 
     this.address = document.querySelector('#walletAddress');
     this.address.addEventListener('click', this.copy);
@@ -21,12 +24,22 @@ class Wallet {
     window.ethereum.on('chainChanged', this.networkChanged, true);
   }
 
-  static getNetwork = async () => {
-    let network = {};
-    network.id = await web3.eth.net.getId().then(id => id);
-    network.name = await web3.eth.net.getNetworkType().then(name => name);
-    return network;
+  getNetwork = async () => {
+    await web3.eth.net.getId()
+      .then(id => id)
+      .then(id => web3.eth.net.getNetworkType().then(name => {
+        let isLocalNetwork = (id == '1337' || name == 'private');
+        if (!isLocalNetwork) {
+          Messenger.error(
+            'Connected network:<br><code>' + name + ' (id:' + id + ')</code>' + '<br>' +
+            'Please switch to the <a href="https://docs.metamask.io/guide/getting-started.html#running-a-test-network" target="_blank" class="underline">local ganache server</a>.',
+          );
+        }
+
+      }))
+      .catch(e => Messenger.error('<b>' + e.code + '</b> ' + e.message));
   }
+
 
   copy = () => {
     let address = this.address.innerHTML;
@@ -36,7 +49,7 @@ class Wallet {
     }
   }
 
-  connect = async () => {
+  connectWallet = async () => {
     Messenger.clearAll();
 
     this.btn.disabled = true;
@@ -105,7 +118,7 @@ class Wallet {
   }
 
   networkChanged = async (chainId) => {
-    Messenger.new('Blockchain switched to: ' + chainId);
+    Messenger.new('Blockchain switched to: ' + web3.utils.hexToNumberString(chainId));
     Messenger.new('Reloading window to reflect changes...');
     setTimeout(() => { window.location.reload() }, 5000);
   }

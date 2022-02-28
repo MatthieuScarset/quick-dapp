@@ -1,6 +1,7 @@
 import "@truffle/contract/dist/truffle-contract.min.js";
 import Web3 from "web3/dist/web3.min.js";
 import './main.css';
+import Contract from './modules/contract';
 import Messenger from './modules/messenger';
 import Wallet from './modules/wallet';
 
@@ -39,7 +40,8 @@ const main = async () => {
   try {
     // "Login".
     const wallet = new Wallet();
-    wallet.connect();
+    wallet.connectWallet();
+    wallet.getNetwork();
 
     // Build contracts forms.
     window.contracts = [];
@@ -52,6 +54,8 @@ const main = async () => {
             await instance.deployed().then(instance => {
               instance.owner().then(owner => instance.deployedBy = owner);
               window.contracts[definition.contractName] = instance;
+              let contract = new Contract(instance);
+              console.log(contract);
               // @todo Render form.
               // @todo Render event || debug how to set a provider with a websocket.
             });
