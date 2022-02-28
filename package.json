@@ -1,7 +1,11 @@
 {
   "name": "bootdapp",
   "description": "A project template for your decentralized application.",
-  "keywords": ["dapp", "truffle", "ganache"],
+  "keywords": [
+    "dapp",
+    "truffle",
+    "ganache"
+  ],
   "author": "Matthieu SCARSET <m@matthieuscarset.com>",
   "license": "MIT",
   "private": true,
@@ -21,12 +25,13 @@
     "preview": "vite preview",
     "build": "vite build --emptyOutDir && yarn run migrate",
     "======= BACK =============================================": "",
-    "migrate": "truffle migrate > $npm_package_config_migrate_file",
+    "migrate": "truffle migrate --reset > $npm_package_config_migrate_file",
     "test": "truffle test",
     "chain": "ganache --account=\"$npm_package_config_private_key, $npm_package_config_initial_balance\" --account_keys_path=\"$npm_package_config_account_file\""
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.5.0",
+    "@truffle/contract": "^4.4.9",
     "autoprefixer": "^10.4.2",
     "ganache": "^7.0.2",
     "postcss": "^8.4.6",

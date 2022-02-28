@@ -10,8 +10,21 @@
   @apply underline italic hover:font-bold;
 }
 
-@supports (-webkit-text-stroke: 1px black) {
-  .stroke {
-    -webkit-text-stroke: 1px black;
-  }
+.button:not(.hidden) {
+  @apply inline-block
+}
+.button {
+  @apply p-2 rounded-xl border-2 border-yellow-400 hover:bg-gray-100;
+}
+.button:disabled {
+  @apply rounded-none border-dashed border-white bg-gray-400 italic cursor-not-allowed;
+}
+
+.address {
+  @apply inline-block align-middle overflow-hidden text-ellipsis max-w-full;
+}
+
+.is-ether:after {
+  content: 'Ξ';
+  @apply inline-block;
 }

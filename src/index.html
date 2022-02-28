@@ -5,20 +5,85 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DApp</title>
+  <title>DApp prototype</title>
+  <script type="module" src="/main.js" defer async></script>
 </head>
 
-<body>
-  <div class="h-screen bg-gray-200">
-    <div id="loading" class="absolute top-0 right-0 bottom-0 left-0 m-auto h-fit w-fit bg-gray-200 text-lg text-center">
-      <img src="assets/loading.gif" alt="Loading face" class="rounded-3xl animate-bounce" />
-      <p class=" mt-6 stroke text-white text-6xl">Looooading...</p>
-    </div>
+<body class="bg-white h-screen">
+  <header class="max-w-4xl m-auto flex flex-row items-stretch justify-between">
+    <a id="logo" class="flex flex-row items-center space-x-6 py-6 hover:text-teal-600" href="/">
+      <img class="h-8 w-auto sm:h-10 px-2" src="/assets/logo.png" alt="Logo" />
+      <h1 class="contract-name" tabindex="0">Dapp project template</h1>
+    </a>
 
-    <div id="app"></div>
+    <nav class="flex items-center space-x-10 px-2" role="main">
+
+    </nav>
+
+    <section id="wallet" class="flex items-center space-x-10 px-2">
+      <button id="walletAddress" class="address"></button>
+      <div id="walletBalance" class="balance"></div>
+      <button id="walletConnect" class="w-24 button">Connect</button>
+    </section>
+  </header>
+
+  <main class="max-w-4xl m-auto">
+
+    <section id="overrides">
+      <details class="p-4 border-2">
+        <summary class="font-bold cursor-pointer">Transaction overrides</summary>
+        <p class="text-xs">Add custom parameters to your calls.</p>
+        <form id="tx-overrides-form" class="flex flex-wrap items-center mt-2 mb-2 p-2 border-2 bg-gray-200">
+          <div class="flex-1 w-1/2 p-2">
+            <label for="from" class="block w-full cursor-pointer">From</label>
+            <input id="from" name="from" type="text" placeholder="From" class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="nonce" class="block w-full cursor-pointer">Nonce</label>
+            <input id="nonce" name="nonce" type="text" placeholder="Do you really need this?" class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="gas-limit" class="block w-full cursor-pointer">Gas limit</label>
+            <input id="gas-limit" name="gasLimit" type="text" placeholder="21400" class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="gas-price" class="block w-full cursor-pointer">Gas price</label>
+            <input id="gas-price" name="gasPrice" type="text" placeholder="fast~750|low~520|average~590" class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+        </form>
+      </details>
+    </section>
+
+    <section id="contract">
+    </section>
+  </main>
+
+
+  <footer class="max-w-4xl m-auto mx-auto py-10 text-center flex items-center justify-center text-sm text-gray-500">
+    <p>Copyright &copy; 2022</p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      Absolutely
+      <a target="_blank" title="Read license in a new tab" class="hover:text-teal-600" href="/LICENSE">
+        no rights reserved</a>
+    </p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      <a target="_blank" title="Learn more about this project" class="hover:text-teal-600" href="https://github.com/MatthieuScarset/dapp-project-template">Github</a>
+    </p>
+    <p class="ml-3 border-l border-gray-200 pl-3">
+      <a target="_blank" title="I am human" class="hover:text-teal-600" href="/humans.txt">whoami</a>
+    </p>
+  </footer>
+
+  <!-- Section required by `modules/messages.js` -->
+  <section id="messages" class="absolute bottom-6 right-2 m-auto mr-6 h-fit max-w-sm">
+    <button id="messagesClear" class="block w-full text-right cursor-pointer hover:text-teal-600">
+      Clear messages
+    </button>
+  </section>
+
+  <div id="loading" style="display: block; margin:auto; position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.9);">
+    <img src="assets/loading.gif" alt="Loading dance" style="display: block; margin:auto; position: absolute; top: 0; bottom: 0; left: 0; right: 0; border-radius: 2rem; border: 5px solid rgba(251,211,7)" />
   </div>
-
-  <script type="module" src="/main.js"></script>
 </body>
 
 </html>
