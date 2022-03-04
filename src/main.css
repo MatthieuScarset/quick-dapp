@@ -20,6 +20,10 @@
   @apply rounded-none border-dashed border-white bg-gray-400 italic cursor-not-allowed;
 }
 
+.button--copy {
+  @apply inline-block p-2 border-2 border-gray-100 hover:bg-gray-100;
+}
+
 .address {
   @apply inline-block align-middle overflow-hidden text-ellipsis max-w-full;
 }

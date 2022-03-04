@@ -16,7 +16,6 @@ class Contract {
     wrapper.id = 'contract-' + this.name;
     wrapper.classList.add('mt-4', 'p-4', 'border-2', 'bg-gray-200');
 
-
     // Title
     let title = document.createElement('h2');
     title.innerHTML = this.name;
@@ -34,6 +33,9 @@ class Contract {
       let methodDefinition = this.instance.abi.filter(a => { return a.name == methodName }).shift();
       let methodForm = this.renderMethodForm(methodDefinition);
 
+      // Actions.
+      console.log(method);
+
       // Custom theming
       let titles = methodForm.querySelectorAll('h3');
       let labels = methodForm.querySelectorAll('label');
@@ -45,6 +47,8 @@ class Contract {
       labels.forEach(el => el.classList.add('block', 'w-full', 'cursor-pointer'));
       inputs.forEach(el => el.classList.add('block', 'w-full', 'border-2', 'p-1'));
       submits.forEach(el => el.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md', 'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600'));
+
+      // methodForm.appendChild(submits);
 
       methodsList.appendChild(methodForm);
     });
@@ -59,13 +63,49 @@ class Contract {
     summary.title = 'Toggle method forms for "' + this.name + '.sol" contract';
     summary.classList.add('font-bold');
 
+    let buttons = document.createElement('nav');
+    buttons.classList.add('flex', 'items-center', 'space-between', 'mt-2', 'mb-2', 'text-sm', 'cursor-pointer', 'bg-gray-200');
+
+    // Copy ABI.
+    let btnAddress = document.createElement('button');
+    btnAddress.id = this.name + '-copyAddress';
+    btnAddress.innerHTML = 'Copy address';
+    btnAddress.classList.add('button--copy');
+    btnAddress.addEventListener('click', () => {
+      navigator.clipboard.writeText(this.instance.address);
+      Messenger.new('Address copied in your clipboard!', true);
+    });
+    buttons.append(btnAddress);
+
+    // Copy contract address.
+    let btnAbi = document.createElement('button');
+    btnAbi.id = this.name + '-copyAbi';
+    btnAbi.innerHTML = 'Copy ABI';
+    btnAbi.classList.add('button--copy', 'mx-2');
+    btnAbi.addEventListener('click', () => {
+      navigator.clipboard.writeText(JSON.stringify(this.instance.abi));
+      Messenger.new('Contract\'s ABI copied!', true);
+    });
+    buttons.append(btnAbi);
+
+    // Open artifact.
+    let btnOpen = document.createElement('button');
+    btnOpen.id = this.name + '-copyDefinition';
+    btnOpen.innerHTML = 'Copy full artifact';
+    btnOpen.classList.add('button--copy');
+    btnOpen.addEventListener('click', () => {
+      navigator.clipboard.writeText(JSON.stringify(this.definition));
+      Messenger.new('Artifact copied in your clipboard!', true);
+    }, true);
+    buttons.append(btnOpen);
+
     details.appendChild(summary);
     details.appendChild(methodsList);
     // details.appendChild(eventsList);
 
     wrapper.appendChild(title);
+    wrapper.appendChild(buttons);
     wrapper.appendChild(details);
-    // wrapper.appendChild(buttons);
 
     return wrapper;
   }
