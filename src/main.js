@@ -11,13 +11,11 @@ const contracts = import.meta.glob('../build/contracts/*.json');
 // Connect to local Ganache chain.
 const provider = new Web3.providers.HttpProvider("http://localhost:8545");
 
-// Run application.
-const main = async () => {
-  // Enable clear button.
+const start = async () => {
   document.querySelector('#messagesClear')
     .addEventListener('click', Messenger.clearAll, true);
 
-  // Stop if no wallet provider found.
+  // No fun because no wallet provider found.
   if (!Boolean(window.ethereum)) {
     document.querySelector('#connect').classList.add('hidden');
 
@@ -33,40 +31,50 @@ const main = async () => {
       '<li><a href="https://walletconnect.com" target="_blank" class="link">Wallet Connect</a> (the most ubiquous)</li>' +
       '</ul>'
     );
-
-    return;
   }
 
   try {
-    // "Login".
+    // Login.
     const wallet = new Wallet();
     wallet.connectWallet();
     wallet.getNetwork();
 
-    // Build contracts forms.
+    // Contracts.
     window.contracts = [];
+    const contractsList = document.querySelector('#contracts');
     for (let path in contracts) {
-      contracts[path]()
-        .then(async (definition) => {
-          try {
-            let instance = TruffleContract(definition);
-            instance.setProvider(provider);
-            await instance.deployed().then(instance => {
+      contracts[path]().then(async (definition) => {
+        // Skip "Migrations" contract used by TruffleSuite.
+        if (definition.contractName == 'Migrations') {
+          return;
+        }
+        
+        try {
+          let instance = TruffleContract(definition);
+          instance.setProvider(provider);
+          await instance.deployed()
+            .then(instance => {
               instance.owner().then(owner => instance.deployedBy = owner);
               window.contracts[definition.contractName] = instance;
-              let contract = new Contract(instance);
-              console.log(contract);
-              // @todo Render form.
-              // @todo Render event || debug how to set a provider with a websocket.
-            });
-          } catch (e) { /* Fail silently. */ }
-        });
-    }
+              Messenger.new('Contract available in console with:<br>' +
+                '<code>window.contracts[' + definition.contractName + ']</code>', 1);
 
-    Messenger.new('Contract(s) available in console with:<br><code>window.contracts</code>', 1);
+              try {
+                // ===================================================
+                // This is where we render the front end forms.
+                // ===================================================
+                let contract = new Contract(instance, definition);
+                let contractForm = contract.renderContractForm();
+                contractsList.appendChild(contractForm);
+              } catch (e) { console.log(e.message) }
+            })
+        } catch (e) { /* Fail silently */ }
+      })
+    }
   } catch (e) {
     console.error(e.message);
   }
 }
 
-main().then(() => document.querySelector('#loading').remove());
+// Yolo!
+start().then(() => document.querySelector('#loading').remove());
