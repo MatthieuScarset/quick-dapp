@@ -29,7 +29,7 @@
 }
 
 .address {
-  @apply inline-block align-middle overflow-hidden text-ellipsis max-w-full;
+  @apply inline-block align-middle overflow-hidden text-ellipsis w-24 hover:underline;
 }
 
 .is-ether:after {
