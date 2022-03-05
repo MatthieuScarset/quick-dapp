@@ -17,7 +17,7 @@ const start = async () => {
 
   // No fun because no wallet provider found.
   if (!Boolean(window.ethereum)) {
-    document.querySelector('#connect').classList.add('hidden');
+    document.querySelector('#walletConnect').classList.add('hidden');
 
     Messenger.error('<b>No wallet provider found</b>' +
       '<br>' +
@@ -48,20 +48,24 @@ const start = async () => {
         if (definition.contractName == 'Migrations') {
           return;
         }
-        
+
         try {
           let instance = TruffleContract(definition);
           instance.setProvider(provider);
+          instance.defaults({
+            // Default sender is the current account.
+            from: Boolean(window.ethereum) ? window.ethereum.accounts[0] : null
+          })
           await instance.deployed()
             .then(instance => {
               instance.owner().then(owner => instance.deployedBy = owner);
               window.contracts[definition.contractName] = instance;
               Messenger.new('Contract available in console with:<br>' +
-                '<code>window.contracts[' + definition.contractName + ']</code>', 1);
+                '<code>window.contracts[\'' + definition.contractName + '\']</code>');
 
               try {
                 // ===================================================
-                // This is where we render the front end forms.
+                // Where we render forms for each contract's methods.
                 // ===================================================
                 let contract = new Contract(instance, definition);
                 let contractForm = contract.renderContractForm();

@@ -24,6 +24,10 @@
   @apply inline-block p-2 border-2 border-gray-100 hover:bg-gray-100;
 }
 
+.button--submit {
+  @apply mt-4 p-2 rounded-md text-sm text-center border-2 cursor-pointer bg-teal-400 hover:bg-teal-600;
+}
+
 .address {
   @apply inline-block align-middle overflow-hidden text-ellipsis max-w-full;
 }
@@ -31,4 +35,9 @@
 .is-ether:after {
   content: 'Ξ';
   @apply inline-block;
+}
+
+.message code,
+.message .result {
+  @apply block max-w-full overflow-x-auto;
 }

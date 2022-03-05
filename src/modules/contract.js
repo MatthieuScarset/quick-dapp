@@ -8,6 +8,7 @@ class Contract {
     this.instance = TruffleContract;
     this.definition = definition;
     this.name = definition.contractName;
+    this.address = definition.contractName;
   }
 
   renderContractForm = () => {
@@ -22,7 +23,7 @@ class Contract {
     title.classList.add('mb-2', 'text-2xl', 'font-bold');
 
     let methodsList = document.createElement('div');
-    methodsList.classList.add('block');
+    methodsList.classList.add('flex', 'space-between', 'flex-wrap', 'items-stretch');
 
     let methods = Object.entries(this.instance.methods);
     methods.forEach(method => {
@@ -33,8 +34,14 @@ class Contract {
       let methodDefinition = this.instance.abi.filter(a => { return a.name == methodName }).shift();
       let methodForm = this.renderMethodForm(methodDefinition);
 
-      // Actions.
-      console.log(method);
+      // Submit.
+      let submit = document.createElement('input');
+      submit.setAttribute('type', 'submit');
+      submit.value = 'Send';
+
+      methodForm.appendChild(submit);
+
+      methodForm.addEventListener('submit', this.onMethodFormSubmit);
 
       // Custom theming
       let titles = methodForm.querySelectorAll('h3');
@@ -42,15 +49,18 @@ class Contract {
       let inputs = methodForm.querySelectorAll('input:not([type="submit"]');
       let submits = methodForm.querySelectorAll('input[type="submit"]');
 
-      methodForm.classList.add('mt-2', 'p-6', 'bg-gray-200');
+      let inner = document.createElement('div');
+      inner.classList.add('flex-1', 'basis-2/4', 'w-1/2', 'max-w-1/2');
+      inner.style.maxWidth = '50%';
+      inner.appendChild(methodForm);
+
+      methodForm.classList.add('m-2', 'p-4', 'border-2', 'bg-gray-100');
       titles.forEach(el => el.classList.add('font-bold'));
       labels.forEach(el => el.classList.add('block', 'w-full', 'cursor-pointer'));
       inputs.forEach(el => el.classList.add('block', 'w-full', 'border-2', 'p-1'));
-      submits.forEach(el => el.classList.add('block', 'mt-2', 'mb-1', 'p-1', 'rounded-md', 'text-sm', 'text-center', 'border-2', 'cursor-pointer', 'bg-teal-400', 'hover:bg-teal-600'));
+      submits.forEach(el => el.classList.add('block', 'ny-2', 'button--submit'));
 
-      // methodForm.appendChild(submits);
-
-      methodsList.appendChild(methodForm);
+      methodsList.appendChild(inner);
     });
 
     // Custom elements for our frontend.
@@ -148,6 +158,61 @@ class Contract {
     event.preventDefault();
 
     Messenger.clearAll();
+
+    let methodForm = event.target;
+    let methodName = methodForm.dataset.methodName;
+    let formData = new FormData(methodForm);
+
+    let args = {};
+    let params = [];
+    // Get call parameters.
+    for (var pair of formData.entries()) {
+      args[pair[0]] = pair[1];
+      params.push(pair[1]);
+    }
+
+    // Get custom transaction options, if set.
+    let txParamsForm = document.getElementById('tx-options-form');
+    let txParamsData = new FormData(txParamsForm);
+    let options = {}
+    for (var pair of txParamsData.entries()) {
+      let value = pair[1];
+      if (value.length < 1) { continue; }
+      if (parseInt(pair[1])) {
+        value = new BN(pair[1]).toString();
+      }
+      options[pair[0]] = value;
+    };
+
+    // Display call details.
+    let msg = 'Call <em><b>' + this.name + '.' + methodName + '()<em></b><br>' +
+      'Arguments: <code>' + JSON.stringify(params) + '</code>' +
+      'Options: <code>' + JSON.stringify(options) + '</code>';
+    Messenger.new(msg);
+
+    // Prepare call action.
+    let action = 'call';
+
+    let fn = this.instance[methodName][action];
+
+    let promise;
+    if (Boolean(params.length) && Boolean(options.length)) {
+      promise = fn(params, options);
+    } else if (Boolean(params.length)) {
+      promise = fn(params);
+    } else if (Boolean(options.length)) {
+      promise = fn(options);
+    } else {
+      promise = fn();
+    }
+
+    // Call now.
+    await promise
+      .then(r => {
+        let result = typeof r == 'String' ? r : JSON.stringify(r);
+        Messenger.new('<p class="font-bold">Result</p><div class="result">' + result + '</div>', 0, 2);
+      })
+      .catch(e => Messenger.error('<p class="font-bold">Error</p><div class="result">' + e.message + '</div>'));
   }
 }
 

@@ -1,5 +1,5 @@
 class Messenger {
-  static timeout = 3000;
+  static timeout = 5000;
 
   static icon = '<span class="sr-only">Close menu</span>' +
     '<svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">' +
@@ -38,6 +38,14 @@ class Messenger {
     if (autoRemove) {
       setTimeout(() => item.remove(), this.timeout);
     }
+
+    content.querySelectorAll('code, .result').forEach(el => {
+      el.classList.add('code', 'cursor-pointer');
+      el.addEventListener('click', () => {
+        navigator.clipboard.writeText(el.innerText);
+        Messenger.new('Value copied to clipboard', true);
+      });
+    })
 
     wrapper.appendChild(item);
   }

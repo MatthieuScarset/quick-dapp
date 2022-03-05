@@ -29,26 +29,30 @@
 
   <main class="max-w-4xl m-auto">
 
-    <section id="overrides">
-      <details class="p-4 border-2">
-        <summary class="font-bold cursor-pointer">Transaction overrides</summary>
+    <section id="options">
+      <details class="mb-2" open="true">
+        <summary class="font-bold cursor-pointer">Options</summary>
         <p class="text-xs">Add custom parameters to your calls.</p>
-        <form id="tx-overrides-form" class="flex flex-wrap items-center mt-2 mb-2 p-2 border-2 bg-gray-200">
+        <form id="tx-options-form" class="flex flex-wrap items-center mt-2 mb-2 p-2 border-2 bg-gray-200">
           <div class="flex-1 w-1/2 p-2">
             <label for="from" class="block w-full cursor-pointer">From</label>
             <input id="from" name="from" type="text" placeholder="From" class="block w-full p-1 border-2 cursor-pointer" />
           </div>
           <div class="flex-1 w-1/2 p-2">
-            <label for="nonce" class="block w-full cursor-pointer">Nonce</label>
-            <input id="nonce" name="nonce" type="text" placeholder="Do you really need this?" class="block w-full p-1 border-2 cursor-pointer" />
+            <label for="gas-price" class="block w-full cursor-pointer">Gas price</label>
+            <input id="gas-price" name="gasPrice" type="text" placeholder="fast~750|low~520|average~590" class="block w-full p-1 border-2 cursor-pointer" />
           </div>
           <div class="flex-1 w-1/2 p-2">
             <label for="gas-limit" class="block w-full cursor-pointer">Gas limit</label>
             <input id="gas-limit" name="gasLimit" type="text" placeholder="21400" class="block w-full p-1 border-2 cursor-pointer" />
           </div>
           <div class="flex-1 w-1/2 p-2">
-            <label for="gas-price" class="block w-full cursor-pointer">Gas price</label>
-            <input id="gas-price" name="gasPrice" type="text" placeholder="fast~750|low~520|average~590" class="block w-full p-1 border-2 cursor-pointer" />
+            <label for="value" class="block w-full cursor-pointer">Value (in Wei)</label>
+            <input id="value" name="value" type="text" placeholder="1e18" class="block w-full p-1 border-2 cursor-pointer" />
+          </div>
+          <div class="flex-1 w-1/2 p-2">
+            <label for="nonce" class="block w-full cursor-pointer">Nonce</label>
+            <input id="nonce" name="nonce" type="text" placeholder="Do you really need this?" class="block w-full p-1 border-2 cursor-pointer" />
           </div>
         </form>
       </details>

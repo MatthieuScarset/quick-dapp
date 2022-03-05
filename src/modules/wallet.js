@@ -5,6 +5,8 @@ const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 class Wallet {
   constructor() {
+    this.enabled = Boolean(window.ethereum);
+
     this.account = false;
 
     this.element = document.querySelector('#wallet');
@@ -20,8 +22,10 @@ class Wallet {
     this.balance = document.querySelector('#walletBalance');
 
     // Register events.
-    window.ethereum.on('accountsChanged', this.accountsChanged, true);
-    window.ethereum.on('chainChanged', this.networkChanged, true);
+    if (this.enabled) {
+      window.ethereum.on('accountsChanged', this.accountsChanged, true);
+      window.ethereum.on('chainChanged', this.networkChanged, true);
+    }
   }
 
   getNetwork = async () => {
@@ -50,6 +54,8 @@ class Wallet {
   }
 
   connectWallet = async () => {
+    if (!this.enabled) { return; }
+
     Messenger.clearAll();
 
     this.btn.disabled = true;
@@ -70,7 +76,7 @@ class Wallet {
           this.btn.classList.add('hidden');
           this.address.classList.remove('hidden');
           this.address.innerHTML = account;
-          Messenger.new('Connected as:<br>' + account, true);
+          Messenger.new('Connected as:<code>' + account + '</code>', true);
         }
 
         this.account = account;
