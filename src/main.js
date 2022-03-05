@@ -10,6 +10,7 @@ const contracts = import.meta.glob('../build/contracts/*.json');
 
 // Connect to local Ganache chain.
 const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+window.web3 = new Web3(provider);
 
 const start = async () => {
   document.querySelector('#messagesClear')
@@ -56,6 +57,8 @@ const start = async () => {
             // Default sender is the current account.
             from: Boolean(window.ethereum) ? window.ethereum.accounts[0] : null
           })
+          // Deal with numbers easily.
+          instance.numberFormat = 'BigNumber';
           await instance.deployed()
             .then(instance => {
               instance.owner().then(owner => instance.deployedBy = owner);

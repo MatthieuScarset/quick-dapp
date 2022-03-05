@@ -5,10 +5,16 @@ const { BN } = Web3.utils;
 
 class Contract {
   constructor(TruffleContract, definition) {
-    this.instance = TruffleContract;
     this.definition = definition;
     this.name = definition.contractName;
-    this.address = definition.contractName;
+    this.abi = definition.abi || [];
+    this.address = definition.address;
+
+    // TruffleContract instance.
+    this.instance = TruffleContract;
+
+    // Web3 JS instance.
+    this.web3 = new window.web3.eth.Contract(this.abi, this.address);
   }
 
   renderContractForm = () => {
@@ -34,12 +40,29 @@ class Contract {
       let methodDefinition = this.instance.abi.filter(a => { return a.name == methodName }).shift();
       let methodForm = this.renderMethodForm(methodDefinition);
 
-      // Submit.
-      let submit = document.createElement('input');
-      submit.setAttribute('type', 'submit');
-      submit.value = 'Send';
+      let buttons = {
+        'call': 'call',
+        'send': 'sendTransaction',
+        'gas': 'estimateGas',
+        'encode': 'encodeABI'
+      };
+      if (methodDefinition.stateMutability === 'view') {
+        delete buttons.send;
+      }
 
-      methodForm.appendChild(submit);
+      let actions = document.createElement('div');
+      actions.classList.add('flex', 'items-center', 'space-between');
+      Object.entries(buttons).forEach(pair => {
+        let submit = document.createElement('input');
+        submit.type = 'submit';
+        submit.value = pair[0];
+        submit.id = this.name + '-' + name;
+        submit.dataset.action = pair[1];
+        submit.classList.add('basis-1/4', 'max-w-1/4');
+
+        actions.appendChild(submit);
+      });
+      methodForm.appendChild(actions);
 
       methodForm.addEventListener('submit', this.onMethodFormSubmit);
 
@@ -190,29 +213,60 @@ class Contract {
       'Options: <code>' + JSON.stringify(options) + '</code>';
     Messenger.new(msg);
 
-    // Prepare call action.
-    let action = 'call';
+    // Prepare call action (default: `call`).
+    let action = event.submitter.dataset.action ?? 'call';
 
-    let fn = this.instance[methodName][action];
+    let fn;
+    if (action == 'encodeABI') {
+      // Use Web3 instance for specific methods.
+      fn = this.web3.methods[methodName];
+    } else {
+      // Use TruffleInstance by default.
+      fn = this.instance[methodName][action];
+    }
 
     let promise;
+    // Handle methods with/without arguments.
     if (Boolean(params.length) && Boolean(options.length)) {
-      promise = fn(params, options);
+      promise = fn(...params, options);
     } else if (Boolean(params.length)) {
-      promise = fn(params);
+      promise = fn(...params);
     } else if (Boolean(options.length)) {
       promise = fn(options);
     } else {
       promise = fn();
     }
 
-    // Call now.
-    await promise
-      .then(r => {
-        let result = typeof r == 'String' ? r : JSON.stringify(r);
-        Messenger.new('<p class="font-bold">Result</p><div class="result">' + result + '</div>', 0, 2);
-      })
-      .catch(e => Messenger.error('<p class="font-bold">Error</p><div class="result">' + e.message + '</div>'));
+
+    switch (action) {
+      case 'encodeABI':
+        Messenger.new('Signature hash:<br><code>' + promise.encodeABI() + '</code>', 0, 2);
+        break;
+      case 'estimateGas':
+        await promise
+          .then(gasAmount => Messenger.new('Gas amount estimated:<br>' + gasAmount, 0, 2))
+          .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
+        break;
+      case 'call':
+        await promise
+          .then(result => {
+            let message = typeof (result) == 'object' ? JSON.stringify(result) : result;
+            Messenger.new('<b>Result</b><br>' + message, 0, 2)
+          })
+          .catch(error => Messenger.error('Error ' + error.code + ': ' + error.message, 0));
+        break;
+      case 'sendTransaction':
+        await promise
+          .on('transactionHash', hash => Messenger.new('TX hash:<code>' + hash + '</code>', 0, 2))
+          .on('receipt', receipt => Messenger.new('TX receipt:<code>' + JSON.stringify(receipt) + '</code>', 0, 2))
+          .on('confirmation', (confirmationNumber, receipt) => Messenger.new('TX confirmation:<b>' + confirmationNumber + '</b><code>' + JSON.stringify(receipt) + '</code>', 0, 2))
+          .on('error', (error, receipt) => Messenger.error('Error ' + error.code + ': ' + error.message + '<code>' + JSON.stringify(receipt) + '</code>', 0));
+        break;
+      default:
+        console.log('Unknown action: ' + action);
+        Messenger.error('<p class="font-bold">Unknown action: ' + action + '</p>');
+        break;
+    }
   }
 }
 
