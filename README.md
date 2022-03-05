@@ -2,14 +2,13 @@
 
 Quickly create and test your Dapp, locally.
 
-Clone this repo and run:
-
 ```bash
-yarn start
+yarn && yarn start
 ```
 
-We could not make this quicker ¯\_(ツ)_/¯ sorry! :)
+That's it, let's BUIDL things now ¯\\_(ツ)_/¯ !
 
+![Frontend screenshot](/src/assets/screenshot.png)
 
 ## Account
 
@@ -38,8 +37,6 @@ Once migrated, the frontend should update automatically.
 There will be a form to play with your contracts' methods.
 
 Restart the app `yarn stop && yarn start` and re-open your browser at `http://localhost:3000`.
-
-That's it, let's BUIDL things now!
 
 ## Dependencies
 
