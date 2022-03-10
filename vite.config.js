@@ -1,4 +1,6 @@
 export default {
-  // App root.
-  root: "src"
+  root: "src",
+  build: {
+    outDir: "../build/dapp"
+  }
 }

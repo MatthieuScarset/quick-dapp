@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+.env
+
 # Ganache & Truffle
 build
 ganache.json

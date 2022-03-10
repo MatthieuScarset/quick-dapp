@@ -1,38 +1,40 @@
 {
-  "name": "bootdapp",
-  "description": "A project template for your decentralized application.",
+  "name": "quick-dapp",
+  "description": "Work on your decentralized application, locally.",
   "keywords": [
     "dapp",
+    "web3",
     "truffle",
     "ganache"
   ],
-  "author": "Matthieu SCARSET <m@matthieuscarset.com>",
+  "author": {
+    "name": "Matthieu SCARSET",
+    "email": "m@matthieuscarset.com",
+    "url": "https://poulet.eth"
+  },
   "license": "MIT",
   "private": true,
   "version": "0.0.0",
-  "config": {
-    "migrate_file": "migrate.log",
-    "account_file": "ganache.json",
-    "private_key": "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d",
-    "initial_balance": "20000000000000000000"
-  },
   "scripts": {
     "======= MAIN =============================================": "",
-    "start": "yarn && (yarn run chain > /dev/null) & (yarn run migrate > /dev/null) & yarn run dev",
+    "start": "yarn && concurrently \"yarn run chain\" \"yarn run migrate\" \"yarn run dev\"",
     "stop": "pkill node",
     "======= FRONT =============================================": "",
     "dev": "vite --open",
     "preview": "vite preview",
-    "build": "vite build --emptyOutDir && yarn run migrate",
+    "build": "vite build --emptyOutDir",
     "======= BACK =============================================": "",
-    "migrate": "truffle migrate --reset > $npm_package_config_migrate_file",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate --reset > migrate.log",
     "test": "truffle test",
-    "chain": "ganache --account=\"$npm_package_config_private_key, $npm_package_config_initial_balance\" --account_keys_path=\"$npm_package_config_account_file\""
+    "chain": "(cp -n .env.example .env) && node ganache.js"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.5.0",
     "@truffle/contract": "^4.4.9",
     "autoprefixer": "^10.4.2",
+    "concurrently": "^7.0.0",
+    "dotenv": "^16.0.0",
     "ganache": "^7.0.2",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",

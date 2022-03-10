@@ -55,7 +55,7 @@ const start = async () => {
           instance.setProvider(provider);
           instance.defaults({
             // Default sender is the current account.
-            from: Boolean(window.ethereum) ? window.ethereum.accounts[0] : null
+            from: Boolean(window.ethereum) && window.ethereum.accounts ? window.ethereum.accounts[0] : null
           })
           // Deal with numbers easily.
           instance.numberFormat = 'BigNumber';
@@ -75,7 +75,7 @@ const start = async () => {
                 contractsList.appendChild(contractForm);
               } catch (e) { console.log(e.message) }
             })
-        } catch (e) { /* Fail silently */ }
+        } catch (e) { console.log(e); }
       })
     }
   } catch (e) {
