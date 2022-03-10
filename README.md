@@ -12,15 +12,19 @@ That's it, let's BUIDL things now ¯\\_(ツ)_/¯ !
 
 ## Account
 
-We run the Ganache blockchain in a deterministic manner, **using a hardcoded private key** in `package.json`.
+We run the Ganache blockchain in a deterministic manner. 
 
-You will need to import this account in your wallet provider in order to _send_ transactions to your contracts.
+You need to import the preconfigured account in your wallet in order to _send_ transactions to your contracts.
 
 Simply copy/paste the private key from `./ganache.json` into your wallet provider.
 
 Finally, select the localhost network at port 8545 in your wallet.
 
 Please, **do not use this on production**.
+
+--- 
+
+You will be able to use your own account via its private key in the `.env` file once [this issue is solved](https://github.com/trufflesuite/ganache/issues/2571).
 
 
 
