@@ -11,10 +11,10 @@ const options = {
   }
 };
 const server = ganache.server(options);
-const PORT = 8545;
-server.listen(PORT, err => {
+const port = process.env.PORT;
+server.listen(port, err => {
   if (err) throw err;
-  console.log(`ganache listening on port ${PORT}...`);
+  console.log(`ganache listening on port ${port}...`);
   const provider = server.provider;
 
   provider.request({

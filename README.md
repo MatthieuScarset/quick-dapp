@@ -3,7 +3,7 @@
 Quickly create and test your Dapp, locally.
 
 ```bash
-yarn && yarn start
+yarn start
 ```
 
 That's it, let's BUIDL things now ¯\\_(ツ)_/¯ !
