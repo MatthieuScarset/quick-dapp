@@ -14,7 +14,7 @@ const options = {
   }
 };
 
-const port = process.env.PORT || 8545;
+const port = parseInt(process.env.PORT) || 8545;
 const server = ganache.server(options);
 server.listen(port, async err => {
   if (err) throw err;
