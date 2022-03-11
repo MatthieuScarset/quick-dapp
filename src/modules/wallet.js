@@ -1,7 +1,10 @@
 import Web3 from "web3/dist/web3.min.js";
 import Messenger from "./messenger";
 
-const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+console.info(import.meta.env);
+
+const port = import.meta.env.PORT || 8545;
+const web3 = new Web3(Web3.givenProvider || `ws://localhost:${port}`);
 
 class Wallet {
   constructor() {

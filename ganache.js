@@ -1,23 +1,27 @@
 require("dotenv").config();
 const ganache = require("ganache");
+const Web3 = require('web3');
 
 const options = {
   account_keys_path: "ganache.json",
-  // This is not working so we use the Deterministic option for now.
-  // @see https://github.com/trufflesuite/ganache/issues/2571
-  deterministic: true,
   wallet: {
-    accounts: [process.env.PRIVATE_KEY, process.env.INITIAL_BALANCE],
+    accounts: [
+      {
+        secretKey: `${process.env.PRIVATE_KEY}`,
+        balance: Web3.utils.toHex(`${process.env.INITIAL_BALANCE}`)
+      }
+    ],
   }
 };
+
+const port = process.env.PORT || 8545;
 const server = ganache.server(options);
-const port = process.env.PORT;
-server.listen(port, err => {
+server.listen(port, async err => {
   if (err) throw err;
   console.log(`ganache listening on port ${port}...`);
   const provider = server.provider;
 
-  provider.request({
+  await provider.request({
     method: "eth_accounts",
     params: []
   }).then(accounts => console.log(accounts));

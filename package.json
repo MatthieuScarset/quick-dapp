@@ -17,7 +17,7 @@
   "version": "0.0.0",
   "scripts": {
     "======= MAIN =============================================": "",
-    "start": "yarn && concurrently \"yarn run chain\" \"yarn run migrate\" \"yarn run dev\"",
+    "start": "yarn && concurrently \"yarn chain\" \"yarn migrate\" \"yarn dev\"",
     "stop": "pkill node",
     "======= FRONT =============================================": "",
     "dev": "vite --open",

@@ -9,7 +9,8 @@ import Wallet from './modules/wallet';
 const contracts = import.meta.glob('../build/contracts/*.json');
 
 // Connect to local Ganache chain.
-const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+const port = import.meta.env.PORT || 8545;
+const provider = new Web3.providers.HttpProvider("http://localhost:" + port);
 window.web3 = new Web3(provider);
 
 const start = async () => {
